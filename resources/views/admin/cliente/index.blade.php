@@ -15,20 +15,13 @@
         <div class="card-header">
             <h3 class="card-title">Listado de Clientes</h3>
             <div class="card-tools">
-                <a href="{{ route('cliente.create') }}" class="btn btn-success btn-sm">
-                    <i class="fas fa-user-plus"></i> Nuevo Cliente
+                <a href="{{ route('cliente.create') }}" class="btn btn-success">
+                    <i class="bi bi-plus"></i> Nuevo Cliente
                 </a>
             </div>
         </div>
 
         <div class="card-body">
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                </div>
-            @endif
-
             <table class="table">
                 <thead>
                     <tr>
