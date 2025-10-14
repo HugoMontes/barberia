@@ -2,72 +2,55 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClienteRequest;
+use App\Http\Requests\UpdateClienteRequest;
 use App\Models\Cliente;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
-class ClienteController extends Controller
-{
+class ClienteController extends Controller {
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Trae todos los clientes de la base de datos usando el modelo Cliente
-        $clientes = Cliente::all();
-        // dd($clientes);
-        // Retorna la vista 'clientes.index' y le pasa la variable $clientes
-        // Compact crea un arreglo con la variable que se va a usar en la vista
+    public function index() {
+        $clientes = Cliente::orderBy('id', 'DESC')->paginate(10);
         return view('admin.cliente.index', compact('clientes'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-        public function create()
-        {
-            // Mostrar la vista con el formulario para crear un nuevo cliente
-            // La vista estará en resources/views/clientes/create.blade.php
-            return view('admin.cliente.create');
-        }
+    public function create() {
+        return view('admin.cliente.create');
+    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-    // 1️⃣ Validar datos
-    $request->validate([
-        'nombre'   => 'required|string|max:255',
-        'apellido' => 'required|string|max:255',
-        'email'    => 'required|email|unique:clientes,email',
-        'telefono' => 'nullable|string|max:20',
-    ]);
+    public function store(StoreClienteRequest $request) {
+        $user = User::create([
+            'name' => $request->nombre,
+            'email'    => $request->email,
+            'password' => isset($request->status) ? $request->password : '',
+            'role' => 'cliente',
+            'status' => isset($request->status) ? 'activo' : 'inactivo',
+        ]);
 
-    // 2️⃣ Obtener el usuario logueado
-    $idUsuario = Auth::id(); 
+        Cliente::create([
+            'user_id'  => $user->id,
+            'nombre'   => $request->nombre,
+            'apellido' => $request->apellido,
+            'telefono' => $request->telefono,
+        ]);
 
-    // 3️⃣ Crear el cliente
-    
-    Cliente::create([
-        'id_user'  => $idUsuario, // aquí se usa
-        'nombre'   => $request->nombre,
-        'apellido' => $request->apellido,
-        'email'    => $request->email,
-        'telefono' => $request->telefono,
-    ]);
-
-    // 4️⃣ Redirigir
-    return redirect()->route('cliente.index')
-                     ->with('success', 'Cliente registrado correctamente.');
-}
+        return redirect()->route('cliente.index')
+            ->with('success', 'Cliente registrado correctamente.');
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(Cliente $cliente)
-    {
+    public function show(Cliente $cliente) {
         $cliente = Cliente::findOrFail($cliente->id);
         return view('clientes.show', compact('cliente'));
     }
@@ -75,8 +58,7 @@ class ClienteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Cliente $cliente)
-    {
+    public function edit(Cliente $cliente) {
         $cliente = Cliente::findOrFail($cliente->id);
         return view('admin.cliente.edit', compact('cliente'));
     }
@@ -84,35 +66,25 @@ class ClienteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cliente $cliente)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'email' => 'required|email|unique:clientes,email',
-            'telefono' => 'nullable|string|max:15', // puede ser opcional
-        ]);
-        $cliente = Cliente::find($cliente->id);
-        // 2️⃣ Crear un nuevo cliente con los datos validados
+    public function update(UpdateClienteRequest $request, Cliente $cliente) {
+        $user = User::findOrFail($cliente->user_id);
+        $user->email = $request->email;
+        $user->update();
+
         $cliente->update([
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
-            'email' => $request->email,
             'telefono' => $request->telefono,
         ]);
 
-        // 3️⃣ Redirigir al listado de clientes con un mensaje de éxito
         return redirect()->route('cliente.index')->with('success', 'Cliente actualizado.corectamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cliente $cliente)
-    {
+    public function destroy(Cliente $cliente) {
         $cliente->delete();
-
-        // Redirigir al listado de barberos con un mensaje de éxito
         return redirect()->route('cliente.index')->with('success', 'cliente eliminado correctamente');
     }
 }

@@ -14,7 +14,7 @@ class Cliente extends Model {
     public $timestamps = true;
 
     // Relación con el usuario
-    public function usuario(): BelongsTo {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
     }
 }
