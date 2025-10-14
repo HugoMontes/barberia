@@ -16,12 +16,12 @@ return new class extends Migration {
             $table->timestamps();
 
             // un clinete ase n reservas (1:N)
-            $table->unsignedBigInteger('id_cliente');
-            $table->foreign('id_cliente')->references('id')->on('clientes')->onDelete('cascade');
+            $table->unsignedBigInteger('cliente_id');
+            $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
 
             // un barbero atiende n reservas (1:N)
-            $table->unsignedBigInteger('id_barbero');
-            $table->foreign('id_barbero')->references('id')->on('barberos')->onDelete('cascade');
+            $table->unsignedBigInteger('barbero_id');
+            $table->foreign('barbero_id')->references('id')->on('barberos')->onDelete('cascade');
         });
     }
 
