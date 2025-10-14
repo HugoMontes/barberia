@@ -20,42 +20,40 @@
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation"
                 aria-label="Main navigation" data-accordion="false" id="navigation">
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-speedometer"></i>
-                        <p>
-                            Dashboard
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
+                        <p>Dashboard</p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('cliente.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-people"></i>
-                                <p>Clientes</p>
-                            </a>
-                            <a href="{{ route('factura.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-receipt"></i>
-                                <p>Facturas</p>
-                            </a>
-
-                            <a href="{{ route('servicio.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-scissors"></i>
-                                <p>Servicios</p>
-                            </a>
-
-                            <a href="{{ route('reserva.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-calendar-check"></i>
-                                <p>Reservas</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('cliente.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>Clientes</p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('barbero.index') }}" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
+                        <i class="nav-icon bi bi-person-badge-fill"></i>
                         <p> Barberos</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('factura.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-receipt"></i>
+                        <p>Facturas</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('servicio.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-scissors"></i>
+                        <p>Servicios</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('reserva.index') }}" class="nav-link">
+                        <i class="nav-icon bi bi-calendar-check"></i>
+                        <p>Reservas</p>
                     </a>
                 </li>
             </ul>
