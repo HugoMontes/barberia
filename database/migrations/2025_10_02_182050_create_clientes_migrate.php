@@ -10,12 +10,12 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('servicios', function (Blueprint $table) {
+        Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->string('descripcion')->nullable();
-            $table->float('precio');
-            $table->string('imagen');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('nombre', 50);
+            $table->string('apellido', 50);
+            $table->string('telefono', 20);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void {
-        Schema::dropIfExists('servicios');
+        Schema::dropIfExists('clientes');
     }
 };
