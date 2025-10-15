@@ -53,7 +53,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted">No hay clientes registrados</td>
+                            <td colspan="6" class="text-center text-muted">No hay barberos registrados</td>
                         </tr>
                     @endforelse
                 </tbody>
