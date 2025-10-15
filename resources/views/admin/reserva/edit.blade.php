@@ -16,7 +16,9 @@
             <div class="card-body">
                 <!-- Seleccionar cliente -->
                 <div class="mb-3">
-                    <label for="cliente_id" class="form-label @error('cliente_id') is-invalid @enderror">Cliente</label>
+                    <label for="cliente_id" class="form-label @error('cliente_id') is-invalid @enderror">
+                        Cliente
+                    </label>
                     <select name="cliente_id" class="form-select" id="cliente_id" required>
                         <option value="" disabled hidden>Seleccione un cliente</option>
                         @foreach ($clientes as $cliente)
@@ -33,12 +35,14 @@
 
                 <!-- Seleccionar barbero -->
                 <div class="mb-3">
-                    <label for="barbero_id" class="form-label @error('barbero_id') is-invalid @enderror">Barbero</label>
+                    <label for="barbero_id" class="form-label @error('barbero_id') is-invalid @enderror">
+                        Barbero
+                    </label>
                     <select name="barbero_id" class="form-select" id="barbero_id" required>
                         <option value="" disabled hidden>Seleccione un barbero</option>
                         @foreach ($barberos as $barbero)
                             <option value="{{ $barbero->id }}" @selected(old('barbero_id', $reserva->barbero_id) == $barbero->id)>
-                                {{ $barbero->nombre }}
+                                {{ $barbero->nombre }} {{ $barbero->apellido }}
                             </option>
                         @endforeach
                     </select>
@@ -47,10 +51,26 @@
                     @enderror
                 </div>
 
+                {{-- Servicios --}}
+                <div class="form-group mb-3">
+                    <label>Servicios:</label>
+                    @foreach ($servicios as $servicio)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="{{ $servicio->id }}"
+                                id="servicio{{ $servicio->id }}"
+                                {{ $reserva->servicios->contains($servicio->id) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="servicio{{ $servicio->id }}">
+                                {{ $servicio->nombre }} - ${{ number_format($servicio->precio, 2) }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
                 <!-- Fecha y hora -->
                 <div class="mb-3">
-                    <label for="fecha_hora" class="form-label @error('fecha_hora') is-invalid @enderror">Fecha y
-                        Hora</label>
+                    <label for="fecha_hora" class="form-label @error('fecha_hora') is-invalid @enderror">
+                        Fecha y Hora
+                    </label>
                     <input type="datetime-local" name="fecha_hora" id="fecha_hora" class="form-control"
                         value="{{ old('fecha_hora', $reserva->fecha_hora) }}" required>
                     @error('fecha_hora')
@@ -60,11 +80,15 @@
 
                 <!-- Estado de la reserva -->
                 <div class="mb-3">
-                    <label for="estado" class="form-label @error('estado') is-invalid @enderror">Estado</label>
+                    <label for="estado" class="form-label @error('estado') is-invalid @enderror">
+                        Estado
+                    </label>
                     <select name="estado" id="estado" class="form-select" required>
-                        <option value="pendiente" @selected(old('estado', $reserva->estado) == 'pendiente')>Pendiente</option>
-                        <option value="confirmada" @selected(old('estado', $reserva->estado) == 'confirmada')>Confirmada</option>
-                        <option value="cancelada" @selected(old('estado', $reserva->estado) == 'cancelada')>Cancelada</option>
+                        @foreach ($estados as $key => $value)
+                            <option value="{{ $key }}" @selected(old('estado', $reserva->estado) == $key)>
+                                {{ $value }}
+                            </option>
+                        @endforeach
                     </select>
                     @error('estado')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -73,9 +97,9 @@
             </div>
 
             <!-- Botones para actualizar o cancelar -->
-            <div class="card-footer">
+            <div class="card-footer text-end">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
-                <a href="{{ route('reserva.index') }}" class="btn float-end">
+                <a href="{{ route('reserva.index') }}" class="btn btn-secondary">
                     <i class="fa fa-times" aria-hidden="true"></i> Cancelar
                 </a>
             </div>

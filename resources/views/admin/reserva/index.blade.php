@@ -24,7 +24,7 @@
                         <th>Barbero</th>
                         <th>Fecha y Hora</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th style="width: 200px">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,7 +34,7 @@
                             <!-- Accedemos al cliente relacionado, previniendo errores si no existe -->
                             <td>{{ $reserva->cliente?->nombre }} {{ $reserva->cliente?->apellido }}</td>
                             <!-- Accedemos al barbero relacionado -->
-                            <td>{{ $reserva->barbero?->nombre }}</td>
+                            <td>{{ $reserva->barbero?->nombre }} {{ $reserva->barbero?->apellido }}</td>
                             <!-- Mostramos fecha y hora en formato legible -->
                             <td>{{ \Carbon\Carbon::parse($reserva->fecha_hora)->format('d/m/Y H:i') }}</td>
                             <td>

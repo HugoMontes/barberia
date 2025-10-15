@@ -21,16 +21,15 @@
 
         <form action="{{ route('reserva.store') }}" method="POST">
             @csrf
-
             <div class="card-body">
                 <!-- Seleccionar cliente -->
                 <div class="mb-3">
-                    <label for="id_cliente" class="form-label">Cliente</label>
-                    <select class="form-select" id="id_cliente" name="id_cliente" required>
+                    <label for="cliente_id" class="form-label">Cliente:</label>
+                    <select class="form-select" id="cliente_id" name="cliente_id" required>
                         <option value="">-- Seleccione un cliente --</option>
                         @foreach ($clientes as $cliente)
-                            <option value="{{ $cliente->id }}" {{ old('id_cliente') == $cliente->id ? 'selected' : '' }}>
-                                {{ $cliente->nombre }}
+                            <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
+                                {{ $cliente->nombre }} {{ $cliente->apellido }}
                             </option>
                         @endforeach
                     </select>
@@ -38,39 +37,54 @@
 
                 <!-- Seleccionar barbero -->
                 <div class="mb-3">
-                    <label for="id_barbero" class="form-label">Barbero</label>
-                    <select class="form-select" id="id_barbero" name="id_barbero" required>
+                    <label for="barbero_id" class="form-label">Barbero:</label>
+                    <select class="form-select" id="barbero_id" name="barbero_id" required>
                         <option value="">-- Seleccione un barbero --</option>
                         @foreach ($barberos as $barbero)
-                            <option value="{{ $barbero->id }}" {{ old('id_barbero') == $barbero->id ? 'selected' : '' }}>
-                                {{ $barbero->nombre }}
+                            <option value="{{ $barbero->id }}" {{ old('barbero_id') == $barbero->id ? 'selected' : '' }}>
+                                {{ $barbero->nombre }} {{ $barbero->apellido }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
+                {{-- Servicios --}}
+                <div class="form-group mb-3">
+                    <label>Servicios:</label>
+                    @foreach ($servicios as $servicio)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="{{ $servicio->id }}"
+                                id="servicio{{ $servicio->id }}">
+                            <label class="form-check-label" for="servicio{{ $servicio->id }}">
+                                {{ $servicio->nombre }} - ${{ number_format($servicio->precio, 2) }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
                 <!-- Fecha y hora -->
                 <div class="mb-3">
-                    <label for="fecha_hora" class="form-label">Fecha y hora</label>
+                    <label for="fecha_hora" class="form-label">Fecha y Hora:</label>
                     <input type="datetime-local" class="form-control" id="fecha_hora" name="fecha_hora"
                         value="{{ old('fecha_hora') }}" required>
                 </div>
 
                 <!-- Estado -->
                 <div class="mb-3">
-                    <label for="estado" class="form-label">Estado</label>
+                    <label for="estado" class="form-label">Estado:</label>
                     <select class="form-select" id="estado" name="estado" required>
-                        <option value="pendiente" {{ old('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                        <option value="confirmada" {{ old('estado') == 'confirmada' ? 'selected' : '' }}>Confirmada
-                        </option>
-                        <option value="cancelada" {{ old('estado') == 'cancelada' ? 'selected' : '' }}>Cancelada</option>
+                        @foreach ($estados as $key => $value)
+                            <option value="{{ $key }}" @selected(old('estado') == $key)>
+                                {{ $value }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>
 
-            <div class="card-footer">
-                <button type="submit" class="btn btn-success">Guardar Reserva</button>
-                <a href="{{ route('reserva.index') }}" class="btn btn-secondary float-end">Cancelar</a>
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{{ route('reserva.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
