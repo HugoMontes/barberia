@@ -60,6 +60,9 @@
                             </label>
                         </div>
                     @endforeach
+                    @error('servicios')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Fecha y hora -->
