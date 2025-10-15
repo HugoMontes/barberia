@@ -8,6 +8,17 @@
             <div class="card-title">Completar el formulario para editar la reserva</div>
         </div>
 
+        <!-- Mostrar errores de validación -->
+        @if ($errors->any())
+            <div class="alert alert-danger m-3">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Formulario para editar reserva -->
         <form action="{{ route('reserva.update', $reserva->id) }}" method="POST">
             @csrf
