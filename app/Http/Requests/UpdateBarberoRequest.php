@@ -4,8 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreClienteRequest extends FormRequest {
-
+class UpdateBarberoRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -19,11 +18,12 @@ class StoreClienteRequest extends FormRequest {
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array {
+        $barbero = $this->route('barbero');
         return [
-            'nombre'   => 'required|string|max:255',
+            'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'telefono' => 'nullable|string|max:20',
+            'email' => 'required|email|unique:users,email,' . $barbero->id,
+            'especialidad' => 'required|string|max:255',
         ];
     }
 }

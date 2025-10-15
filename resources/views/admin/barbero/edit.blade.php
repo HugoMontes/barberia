@@ -17,10 +17,9 @@
                 <!-- Campo: Nombre -->
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control @error('nombre') is-invalid @enderror"
-                           id="nombre" name="nombre"
-                           value="{{ old('nombre', $barbero->nombre) }}"
-                           placeholder="Ingrese el nombre del barbero" required />
+                    <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre"
+                        name="nombre" value="{{ old('nombre', $barbero->nombre) }}"
+                        placeholder="Ingrese el nombre del barbero" required />
                     @error('nombre')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -29,10 +28,9 @@
                 <!-- Campo: Apellido -->
                 <div class="mb-3">
                     <label for="apellido" class="form-label">Apellido</label>
-                    <input type="text" class="form-control @error('apellido') is-invalid @enderror"
-                           id="apellido" name="apellido"
-                           value="{{ old('apellido', $barbero->apellido) }}"
-                           placeholder="Ingrese el apellido del barbero" required />
+                    <input type="text" class="form-control @error('apellido') is-invalid @enderror" id="apellido"
+                        name="apellido" value="{{ old('apellido', $barbero->apellido) }}"
+                        placeholder="Ingrese el apellido del barbero" required />
                     @error('apellido')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -41,10 +39,9 @@
                 <!-- Campo: Email -->
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo electrónico</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                           id="email" name="email"
-                           value="{{ old('email', $barbero->email) }}"
-                           placeholder="example@domain.com" required />
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                        name="email" value="{{ old('email', $barbero->user->email) }}" placeholder="example@domain.com"
+                        required />
                     @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -53,10 +50,9 @@
                 <!-- Campo: Especialidad -->
                 <div class="mb-3">
                     <label for="especialidad" class="form-label">Especialidad</label>
-                    <input type="text" class="form-control @error('especialidad') is-invalid @enderror"
-                           id="especialidad" name="especialidad"
-                           value="{{ old('especialidad', $barbero->especialidad) }}"
-                           placeholder="Ej: Corte clásico, degradado, barba, etc." required />
+                    <input type="text" class="form-control @error('especialidad') is-invalid @enderror" id="especialidad"
+                        name="especialidad" value="{{ old('especialidad', $barbero->especialidad) }}"
+                        placeholder="Ej: Corte clásico, degradado, barba, etc." required />
                     @error('especialidad')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -64,9 +60,9 @@
 
             </div>
 
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                <a href="{{ route('barbero.index') }}" class="btn btn-secondary float-end">
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{{ route('barbero.index') }}" class="btn btn-secondary">
                     Cancelar
                 </a>
             </div>
