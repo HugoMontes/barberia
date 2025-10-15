@@ -56,10 +56,10 @@
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        @include('admin.layouts.header')
+        @include('layouts.admin.header')
         <!--end::Header-->
         <!--begin::Sidebar-->
-        @include('admin.layouts.menu')
+        @include('layouts.admin.menu')
         <!--end::Sidebar-->
         <!--begin::App Main-->
         <main class="app-main">

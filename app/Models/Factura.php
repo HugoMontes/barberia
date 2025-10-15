@@ -18,6 +18,7 @@ class Factura extends Model {
         'total',
         'estado',
         // 'id_cliente',
+        'reserva_id'
     ];
 
     // Relación con Cliente

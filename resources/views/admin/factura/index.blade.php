@@ -1,4 +1,4 @@
-@extends('admin.layouts.main')
+@extends('layouts.admin.main')
 
 @section('title', 'Facturas')
 
@@ -35,7 +35,8 @@
                                 <a href="{{ route('factura.edit', $factura->id) }}" class="btn btn-sm btn-primary">Editar</a>
 
                                 <!-- Eliminar factura -->
-                                <form action="{{ route('factura.destroy', $factura->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('factura.destroy', $factura->id) }}" method="POST"
+                                    style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-eliminar">Eliminar</button>

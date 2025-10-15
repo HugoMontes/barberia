@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BarberoController;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\FacturaController;
-use App\Http\Controllers\ReservaController;
-use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\Admin\BarberoController;
+use App\Http\Controllers\Admin\ClienteController;
+use App\Http\Controllers\Admin\FacturaController;
+use App\Http\Controllers\Admin\ReservaController;
+use App\Http\Controllers\Admin\ServicioController;
 
 Route::get('/', function () {
     return view('welcome');

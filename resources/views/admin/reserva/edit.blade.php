@@ -1,4 +1,4 @@
-@extends('admin.layouts.main')
+@extends('layouts.admin.main')
 
 @section('title', 'Editar Reserva')
 
@@ -49,7 +49,8 @@
 
                 <!-- Fecha y hora -->
                 <div class="mb-3">
-                    <label for="fecha_hora" class="form-label @error('fecha_hora') is-invalid @enderror">Fecha y Hora</label>
+                    <label for="fecha_hora" class="form-label @error('fecha_hora') is-invalid @enderror">Fecha y
+                        Hora</label>
                     <input type="datetime-local" name="fecha_hora" id="fecha_hora" class="form-control"
                         value="{{ old('fecha_hora', $reserva->fecha_hora) }}" required>
                     @error('fecha_hora')

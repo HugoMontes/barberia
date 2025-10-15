@@ -1,4 +1,4 @@
-@extends('admin.layouts.main')
+@extends('layouts.admin.main')
 
 @section('title', 'Reservas')
 
@@ -49,12 +49,14 @@
                             </td>
                             <td>
                                 <!-- Botón para editar la reserva -->
-                                <a href="{{ route('reserva.edit', $reserva->id) }}" class="btn btn-sm btn-primary" title="Editar">
+                                <a href="{{ route('reserva.edit', $reserva->id) }}" class="btn btn-sm btn-primary"
+                                    title="Editar">
                                     Editar
                                 </a>
 
                                 <!-- Formulario para eliminar la reserva -->
-                                <form action="{{ route('reserva.destroy', $reserva->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('reserva.destroy', $reserva->id) }}" method="POST"
+                                    style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-eliminar">Eliminar</button>
