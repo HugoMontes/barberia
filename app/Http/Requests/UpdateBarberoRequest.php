@@ -22,7 +22,7 @@ class UpdateBarberoRequest extends FormRequest {
         return [
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $barbero->id,
+            'email' => 'required|email|unique:users,email,' . $barbero->user_id,
             'especialidad' => 'required|string|max:255',
         ];
     }
