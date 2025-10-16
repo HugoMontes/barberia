@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Factura extends Model {
@@ -29,5 +30,9 @@ class Factura extends Model {
 
     public function detalleFacturas(): HasMany {
         return $this->hasMany(DetalleFactura::class, 'factura_id', 'id');
+    }
+
+    public function reserva(): BelongsTo {
+        return $this->belongsTo(reserva::class, 'reserva_id');
     }
 }

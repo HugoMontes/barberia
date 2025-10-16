@@ -22,6 +22,7 @@
                         <th>Total</th>
                         <th>Descripción</th>
                         <th>Fecha</th>
+                        <th>Estado</th>
                         <th style="width: 200px">Acciones</th>
                     </tr>
                 </thead>
@@ -35,16 +36,29 @@
                             <td>{{ $factura->descripcion ? $factura->descripcion : '-' }}</td>
                             <td>{{ $factura->created_at->format('d/m/Y H:i') }}</td>
                             <td>
-                                <!-- Editar factura -->
-                                <a href="{{ route('factura.edit', $factura->id) }}"
-                                    class="btn btn-sm btn-primary">Editar</a>
-
-                                <!-- Eliminar factura -->
+                                @if ($factura->estado == 'pendiente')
+                                    <span class="badge bg-warning">{{ $factura->estado }}</span>
+                                @elseif ($factura->estado == 'pagada')
+                                    <span class="badge bg-success">{{ $factura->estado }}</span>
+                                @else
+                                    <span class="badge bg-danger">{{ $factura->estado }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                <!-- Imprimir Factura -->
+                                <a href="{{ route('factura.show', $factura->id) }}" class="btn btn-sm btn-info"
+                                    title="Imprimir" {{ $factura->estado == 'pendiante' ? 'disabled' : '' }}>
+                                    Imprimir
+                                </a>
+                                <!-- Anular factura -->
                                 <form action="{{ route('factura.destroy', $factura->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger btn-eliminar">Eliminar</button>
+                                    <button type="button" class="btn btn-sm btn-danger btn-eliminar"
+                                        {{ $factura->estado == 'anulada' ? 'disabled' : '' }}>
+                                        Anular
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -58,7 +72,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@section('script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -67,13 +81,13 @@
                     e.preventDefault();
                     const form = e.target.closest('form');
                     Swal.fire({
-                        title: '¿Estás seguro de eliminar la factura?',
-                        text: "¡No podrás revertir esto!",
+                        title: '¿Estás seguro de anular la factura?',
+                        text: "¡No podrás revertir este cambio!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Sí, eliminar',
+                        confirmButtonText: 'Sí, anular',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {

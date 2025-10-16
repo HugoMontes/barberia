@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('nit_comprador', 20);
             $table->date('fecha_emision');
             $table->float('total');
-            $table->enum('estado', ['pendiente', 'pagada', 'cancelada'])->default('pagada');
+            $table->enum('estado', ['pendiente', 'pagada', 'anulada'])->default('pagada');
 
             // 1 a N
             // $table->unsignedBigInteger('id_cliente');

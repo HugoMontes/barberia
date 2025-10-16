@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constants\FacturaEstados;
 use App\Constants\ReservaEstados;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFacturaRequest;
-use App\Models\Cliente;
 use App\Models\DetalleFactura;
 use App\Models\Factura;
 use App\Models\Reserva;
@@ -88,68 +88,24 @@ class FacturaController extends Controller {
      * Show the form for editing the specified resource.
      */
     public function edit(Factura $factura) {
-        // Trae todos los clientes para el select
-        $clientes = Cliente::all();
-
-        // Trae todas las reservas para poder seleccionar la reserva asociada
-        $reservas = Reserva::all();
-
-        // Trae todos los servicios disponibles
-        $servicios = Servicio::all();
-
-        // Trae los detalles de la factura para marcar los servicios ya seleccionados
-        $detalle = $factura->detalles; // Relación hasMany desde el modelo Factura
-
-        // Retorna la vista de edición con todos los datos necesarios
-        return view('admin.factura.edit', compact('factura', 'clientes', 'reservas', 'servicios', 'detalle'));
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Factura $factura) {
-        // Validar los datos recibidos del formulario
-        $request->validate([
-            'total' => 'required|numeric',         // El total debe ser un número
-            'descripcion' => 'required|string',    // Descripción obligatoria
-            'precio' => 'required|numeric',        // Precio debe ser numérico
-            'id_cliente' => 'required|exists:clientes,id',  // Cliente debe existir
-            'id_reserva' => 'required|exists:reservas,id',  // Reserva debe existir
-            'servicios' => 'required|array',       // Servicios es un arreglo
-            'servicios.*' => 'exists:servicios,id' // Cada servicio debe existir en la tabla servicios
-        ]);
-
-        // Actualizar los campos de la factura
-        $factura->update($request->only('total', 'descripcion', 'precio', 'id_cliente'));
-
-        // Eliminar los detalles de factura existentes para reemplazarlos
-        $factura->detalles()->delete();
-
-        // Guardar los nuevos detalles de la factura
-        foreach ($request->servicios as $servicio_id) {
-            $factura->detalles()->create([
-                'id_reserva' => $request->id_reserva,
-                'id_servicio' => $servicio_id,
-                'precio' => $request->precio,  // Se podría ajustar por servicio
-            ]);
-        }
-
-        // Redirigir al listado de facturas con mensaje de éxito
-        return redirect()->route('factura.index')->with('success', 'Factura actualizada correctamente');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Factura $factura) {
-        // Primero eliminamos todos los detalles asociados a la factura
-        $factura->detalles()->delete();
-
-        // Luego eliminamos la factura principal
-        $factura->delete();
-
-        // Redirigir al listado de facturas con mensaje de éxito
-        return redirect()->route('factura.index')->with('success', 'Factura eliminada correctamente');
+        $factura->estado = FacturaEstados::ANULADA;
+        $factura->descripcion = '-- FACTURA ANULADA EN FECHA ' . now()->format('d/m/Y H:i');
+        $factura->update();
+        return redirect()->route('factura.index')->with('success', 'Factura anulada correctamente');
     }
 
     public function detalleFactura(Request $request, int $reservaId) {
