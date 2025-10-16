@@ -9,47 +9,60 @@
             <h3 class="card-title">Crear Nueva Factura</h3>
         </div>
 
-        <div class="card-body">
-            {{-- Mostrar errores de validación --}}
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        {{-- Mostrar errores de validación --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-            {{-- Formulario para crear factura --}}
-            <form action="{{ route('factura.store') }}" method="POST">
-                @csrf
-
-                {{-- Seleccionar Cliente --}}
-                <div class="form-group mb-3">
-                    <label for="id_cliente">Cliente:</label>
-                    <select name="id_cliente" id="id_cliente" class="form-control" required>
-                        <option value="">-- Selecciona un Cliente --</option>
-                        @foreach ($clientes as $cliente)
-                            <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                        @endforeach
-                    </select>
-                </div>
+        {{-- Formulario para crear factura --}}
+        <form action="{{ route('factura.store') }}" method="POST">
+            @csrf
+            <div class="card-body">
 
                 {{-- Seleccionar Reserva --}}
                 <div class="form-group mb-3">
-                    <label for="id_reserva">Reserva:</label>
-                    <select name="id_reserva" id="id_reserva" class="form-control" required>
+                    <label for="reserva_id">Reserva:</label>
+                    <select name="reserva_id" id="reserva_id" class="form-control">
                         <option value="">-- Selecciona una Reserva --</option>
                         @foreach ($reservas as $reserva)
                             <option value="{{ $reserva->id }}">
-                                {{ $reserva->fecha_hora }} - {{ $reserva->cliente->nombre }}
+                                {{ $reserva->fecha_hora }} -
+                                {{ $reserva->cliente->nombre }}
+                                {{ $reserva->cliente->apellido }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
+                <!-- Nombre Comprador -->
+                <div class="mb-3">
+                    <label for="nombre_comprador" class="form-label @error('nombre_comprador') is-invalid @enderror">
+                        Nombre Comprador:
+                    </label>
+                    <input type="text" class="form-control" id="nombre_comprador" name="nombre_comprador"
+                        value="{{ old('nombre_comprador') }}" placeholder="Ingrese nombre para la factura" required>
+                    @error('nombre_comprador')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
+                <!-- NIT Comprador -->
+                <div class="mb-3">
+                    <label for="nit_comprador" class="form-label @error('nit_comprador') is-invalid @enderror">
+                        NIT / CI:
+                    </label>
+                    <input type="text" class="form-control" id="nit_comprador" name="nit_comprador"
+                        value="{{ old('nit_comprador') }}" placeholder="Ingrese nombre para la factura" required>
+                    @error('nit_comprador')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 {{-- Descripción --}}
                 <div class="form-group mb-3">
@@ -57,37 +70,113 @@
                     <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Opcional"></textarea>
                 </div>
 
-                {{-- Servicios --}}
+                {{-- Detalle Factura --}}
                 <div class="form-group mb-3">
-                    <label>Servicios:</label>
-                    @foreach ($servicios as $servicio)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="{{ $servicio->id }}"
-                                id="servicio{{ $servicio->id }}">
-                            <label class="form-check-label" for="servicio{{ $servicio->id }}">
-                                {{ $servicio->nombre }} - ${{ number_format($servicio->precio, 2) }}
-                            </label>
-                        </div>
-                    @endforeach
+                    <label>Detalle Factura:</label>
+                    <div id="detalle-factura-container">
+                        <!-- Contenido dinamico -->
+                        @include('admin.factura.partials.create-detalle-factura', [
+                            'servicios' => $servicios,
+                            'reserva' => null,
+                        ])
+                    </div>
                 </div>
+            </div>
 
-                {{-- Precio --}}
-                <div class="form-group mb-3">
-                    <label for="precio">Precio Total:</label>
-                    {{-- <input type="number" name="precio" id="precio" class="form-control" step="0.01" required> --}}
-                    {{-- <select name="precio" id="precio">
-                    <option value="10">10</option>
-                                        <option value="20">20</option>
-                                                            <option value="12">12</option> --}}
-
-
-                    {{-- </select> --}}
-                </div>
-
-                {{-- Botón Guardar --}}
-                <button type="submit" class="btn btn-success">Crear Factura</button>
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-success">Guardar</button>
                 <a href="{{ route('factura.index') }}" class="btn btn-secondary">Cancelar</a>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectReserva = document.getElementById('reserva_id');
+            const contenedorDetalle = document.getElementById('detalle-factura-container');
+            const nombreComprador = document.getElementById('nombre_comprador');
+
+            selectReserva.addEventListener('change', function() {
+                const reservaId = this.value;
+                // Limpiar contenedor si no hay selección
+                if (!reservaId) {
+                    contenedorDetalle.innerHTML = '';
+                    return;
+                }
+
+                // Mostrar loading
+                contenedorDetalle.innerHTML =
+                    '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
+
+                // Hacer petición AJAX
+                fetch(`/factura/reserva/detalle/${reservaId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Insertar el HTML recibido
+                        contenedorDetalle.innerHTML = data.html;
+                        nombreComprador.value = data.apellido_cliente;
+                        inicializarCheckboxes();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        contenedorDetalle.innerHTML =
+                            '<div class="alert alert-danger">Error al cargar el detalle</div>';
+                    });
+            });
+
+            // Función inicializar checkboxes
+            function inicializarCheckboxes() {
+                const checkboxes = document.querySelectorAll('.servicio-checkbox');
+
+                checkboxes.forEach(checkbox => {
+                    // Remover event listener previo para evitar duplicados
+                    checkbox.replaceWith(checkbox.cloneNode(true));
+                });
+
+                // Volver a obtener los checkboxes después del clone
+                const nuevosCheckboxes = document.querySelectorAll('.servicio-checkbox');
+
+                nuevosCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const precioCell = this.closest('tr').querySelector('.precio-cell');
+                        const precio = parseFloat(this.dataset.precio);
+
+                        if (this.checked) {
+                            precioCell.style.display = 'block';
+                        } else {
+                            precioCell.style.display = 'none';
+                        }
+
+                        calcularTotal();
+                    });
+                });
+            }
+
+            // Función para calcular total
+            function calcularTotal() {
+                const checkboxes = document.querySelectorAll('.servicio-checkbox');
+                const totalElement = document.getElementById('total');
+                const totalInput = document.getElementById('totalValue');
+                let total = 0;
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        total += parseFloat(checkbox.dataset.precio);
+                    }
+                });
+
+                totalElement.textContent = total.toFixed(2);
+                totalInput.value = total.toFixed(2);
+            }
+
+            inicializarCheckboxes();
+        });
+    </script>
 @endsection

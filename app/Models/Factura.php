@@ -15,6 +15,7 @@ class Factura extends Model {
         'fecha_emision',
         'nombre_comprador',
         'nit_comprador',
+        'descripcion',
         'total',
         'estado',
         // 'id_cliente',

@@ -43,6 +43,10 @@
                                     <span class="badge bg-warning">{{ $reserva->estado }}</span>
                                 @elseif ($reserva->estado == 'confirmada')
                                     <span class="badge bg-success">{{ $reserva->estado }}</span>
+                                @elseif ($reserva->estado == 'completada')
+                                    <span class="badge bg-info">{{ $reserva->estado }}</span>
+                                @elseif ($reserva->estado == 'facturada')
+                                    <span class="badge bg-secondary">{{ $reserva->estado }}</span>
                                 @else
                                     <span class="badge bg-danger">{{ $reserva->estado }}</span>
                                 @endif

@@ -78,3 +78,7 @@
         </form>
     </div>
 @endsection
+
+@section('scripts')
+
+@endsection

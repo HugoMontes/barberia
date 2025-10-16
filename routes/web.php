@@ -17,6 +17,7 @@ Route::get('/plantilla', function () {
 
 Route::resource('cliente', ClienteController::class);
 Route::resource('barbero', BarberoController::class);
-Route::resource('factura', FacturaController::class);
 Route::resource('servicio', ServicioController::class);
 Route::resource('reserva', ReservaController::class);
+Route::resource('factura', FacturaController::class);
+Route::get('factura/reserva/detalle/{reserva_id}', [FacturaController::class, 'detalleFactura'])->name('factura.reserva.detalle');

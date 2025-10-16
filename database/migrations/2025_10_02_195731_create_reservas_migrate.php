@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create('reservas', function (Blueprint $table) {
             $table->id();
             $table->dateTime('fecha_hora');
-            $table->enum('estado', ['pendiente', 'confirmada', 'completada', 'cancelada'])->default('pendiente');
+            $table->enum('estado', ['pendiente', 'confirmada', 'completada', 'facturada', 'cancelada'])->default('pendiente');
             $table->timestamps();
 
             // un clinete ase n reservas (1:N)

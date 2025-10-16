@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constants\ReservaEstados;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFacturaRequest;
 use App\Models\Cliente;
 use App\Models\DetalleFactura;
 use App\Models\Factura;
 use App\Models\Reserva;
 use App\Models\Servicio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FacturaController extends Controller {
+
     /**
      * Display a listing of the resource.
      */
     public function index() {
-        $facturas = Factura::with('cliente')->get(); // Trae las facturas junto con info del cliente
+        $facturas = Factura::orderBy('id', 'DESC')->paginate(10);
         return view('admin.factura.index', compact('facturas'));
     }
 
@@ -23,50 +28,52 @@ class FacturaController extends Controller {
      * Show the form for creating a new resource.
      */
     public function create() {
-        $clientes = Cliente::all();    // Todos los clientes
-        $reservas = Reserva::all();    // Todas las reservas
-        $servicios = Servicio::all();  // Todos los servicios
-
-        return view('admin.factura.create', compact('clientes', 'reservas', 'servicios'));
+        $reservas = Reserva::where('estado', ReservaEstados::COMPLETADA)->get();
+        $servicios = Servicio::all();
+        return view('admin.factura.create', compact('reservas', 'servicios'));
     }
-
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {
-        // Validar los datos recibidos del formulario
-        $request->validate([
-            'id_cliente' => 'required|exists:clientes,id',  // El cliente es obligatorio y debe existir
-            'id_reserva' => 'required|exists:reservas,id',  // La reserva es obligatoria y debe existir
-            // 'precio'     => 'required|numeric',            // El precio es obligatorio y debe ser un número
-            'descripcion' => 'nullable|string',             // La descripción es opcional
-            'servicios'  => 'required|array',              // Los servicios deben ser enviados como un arreglo
-            'servicios.*' => 'exists:servicios,id',         // Cada servicio debe existir en la tabla servicios
-        ]);
-
-        // Crear la factura principal
-        $factura = Factura::create([
-            'id_cliente' => $request->id_cliente,
-            'id_reserva' => $request->id_reserva,
-            // 'precio'     => $request->precio,
-            'precio'     => 0,
-            'descripcion' => $request->descripcion,
-            // 'total'      => $request->precio, // Puedes ajustar si el total depende de los servicios
-            'total' => 0,
-        ]);
-
-        // Guardar los detalles de la factura (relación 1 a N con detalle_factura)
-        foreach ($request->servicios as $servicio_id) {
-            DetalleFactura::create([
-                'id_factura' => $factura->id,
-                'id_servicio' => $servicio_id,
-                'id_reserva' => $request->id_reserva,
-                'precio'     => Servicio::find($servicio_id)->precio, // Tomamos el precio del servicio
+    public function store(StoreFacturaRequest $request) {
+        DB::beginTransaction();
+        try {
+            // Crear la factura principal
+            $factura = Factura::create([
+                'reserva_id' => $request->reserva_id,
+                'fecha_emision' => now(),
+                'nombre_comprador' => $request->nombre_comprador,
+                'nit_comprador' => $request->nit_comprador,
+                'descripcion' => $request->descripcion,
+                'total' => $request->total,
             ]);
-        }
 
-        // Redirigir al listado de facturas con un mensaje de éxito
+            // Guardar los detalles de la factura (relación 1 a N con detalle_factura)
+            foreach ($request->servicios as $servicio_id) {
+                $precioServicio = Servicio::find($servicio_id)->precio; // Tomamos el precio del servicio
+                $cantidad = 1; // Cantidad por default 1
+                DetalleFactura::create([
+                    'factura_id' => $factura->id,
+                    'servicio_id' => $servicio_id,
+                    'cantidad' => $cantidad,
+                    'precio_unitario' => $precioServicio,
+                    'subtotal' => $cantidad * $precioServicio,
+                ]);
+            }
+
+            // Cambiar estado de reserva
+            if (isset($request->reserva_id)) {
+                $reserva = Reserva::findOrFail($request->reserva_id);
+                $reserva->estado = ReservaEstados::FACTURADA;
+                $reserva->update();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error en transacción:', ['error' => $e->getMessage()]);
+            return redirect()->route('factura.index')->with('error', 'Error al guardar factura');
+        }
         return redirect()->route('factura.index')->with('success', 'Factura creada correctamente');
     }
 
@@ -143,5 +150,15 @@ class FacturaController extends Controller {
 
         // Redirigir al listado de facturas con mensaje de éxito
         return redirect()->route('factura.index')->with('success', 'Factura eliminada correctamente');
+    }
+
+    public function detalleFactura(Request $request, int $reservaId) {
+        $servicios = Servicio::all();
+        $reserva = Reserva::findOrFail($reservaId);
+        $reserva->load('servicios');
+        return response()->json([
+            'html' => view('admin.factura.partials.create-detalle-factura', compact('servicios', 'reserva'))->render(),
+            'apellido_cliente' => $reserva->cliente->apellido,
+        ]);
     }
 }

@@ -4,9 +4,13 @@
 
 @section('content')
     <div class="card card-primary card-outline mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header">
             <div class="card-title">Listado de Facturas</div>
-            <a href="{{ route('factura.create') }}" class="btn btn-primary">Nueva Factura</a>
+            <div class="card-tools">
+                <a href="{{ route('factura.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Nueva Factura
+                </a>
+            </div>
         </div>
 
         <div class="card-body">
@@ -18,7 +22,7 @@
                         <th>Total</th>
                         <th>Descripción</th>
                         <th>Fecha</th>
-                        <th>Acciones</th>
+                        <th style="width: 200px">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,13 +30,14 @@
                         <tr>
                             <td>{{ $factura->id }}</td>
                             <!-- Cliente asociado a la factura -->
-                            <td>{{ $factura->cliente->nombre }} {{ $factura->cliente->apellido }}</td>
-                            <td>${{ number_format($factura->total, 2) }}</td>
-                            <td>{{ $factura->descripcion }}</td>
+                            <td>{{ $factura->nombre_comprador }}</td>
+                            <td>{{ number_format($factura->total, 2) }}</td>
+                            <td>{{ $factura->descripcion ? $factura->descripcion : '-' }}</td>
                             <td>{{ $factura->created_at->format('d/m/Y H:i') }}</td>
                             <td>
                                 <!-- Editar factura -->
-                                <a href="{{ route('factura.edit', $factura->id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="{{ route('factura.edit', $factura->id) }}"
+                                    class="btn btn-sm btn-primary">Editar</a>
 
                                 <!-- Eliminar factura -->
                                 <form action="{{ route('factura.destroy', $factura->id) }}" method="POST"
@@ -48,7 +53,7 @@
             </table>
 
             <!-- Paginación -->
-            {{-- {{ $facturas->links('pagination::bootstrap-5') }} --}}
+            {{ $facturas->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection
