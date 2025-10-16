@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder {
             [
                 UserSeeder::class,
                 BarberoSeeder::class,
+                ClienteSeeder::class,
                 ServicioSeeder::class,
             ]
         );
