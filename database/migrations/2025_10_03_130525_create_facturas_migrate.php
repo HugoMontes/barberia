@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
-            $table->text('nombre_comprador', 50);
-            $table->text('nit_comprador', 20);
+            $table->string('nombre_comprador', 50);
+            $table->string('nit_comprador', 20);
             $table->date('fecha_emision');
             $table->float('total');
             $table->enum('estado', ['pendiente', 'pagada', 'cancelada']);

@@ -11,6 +11,7 @@ return new class extends Migration {
      */
     public function up(): void {
         Schema::table('facturas', function (Blueprint $table) {
+            $table->text('descripcion');
             $table->unsignedBigInteger('reserva_id');
             $table->foreign('reserva_id')->references('id')->on('reservas')->onDelete('cascade')->nullable();
         });
@@ -21,6 +22,7 @@ return new class extends Migration {
      */
     public function down(): void {
         Schema::table('facturas', function (Blueprint $table) {
+            $table->dropForeign(['reserva_id']);
             $table->dropColumn('reserva_id');
         });
     }
