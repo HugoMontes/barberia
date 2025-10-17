@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
 
         // Hacer petición AJAX
-        fetch(`/factura/reserva/detalle/${reservaId}`)
+        fetch(`/admin/factura/reserva/detalle/${reservaId}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Error en la respuesta");

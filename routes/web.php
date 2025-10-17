@@ -13,6 +13,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
+    Route::resource('cliente', ClienteController::class);
+    Route::resource('barbero', BarberoController::class);
+    Route::resource('servicio', ServicioController::class);
+    Route::resource('reserva', ReservaController::class);
+    Route::resource('factura', FacturaController::class);
+    Route::get('/factura/reserva/detalle/{reserva_id}', [FacturaController::class, 'detalleFactura'])->name('factura.reserva.detalle');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -24,11 +34,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
-Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
-Route::resource('cliente', ClienteController::class);
-Route::resource('barbero', BarberoController::class);
-Route::resource('servicio', ServicioController::class);
-Route::resource('reserva', ReservaController::class);
-Route::resource('factura', FacturaController::class);
-Route::get('factura/reserva/detalle/{reserva_id}', [FacturaController::class, 'detalleFactura'])->name('factura.reserva.detalle');
