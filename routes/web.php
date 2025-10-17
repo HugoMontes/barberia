@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\BarberoController;
 use App\Http\Controllers\Admin\ClienteController;
+use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Http\Controllers\Admin\FacturaController;
 use App\Http\Controllers\Admin\ReservaController;
 use App\Http\Controllers\Admin\ServicioController;
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
+Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
 Route::resource('cliente', ClienteController::class);
 Route::resource('barbero', BarberoController::class);
 Route::resource('servicio', ServicioController::class);
