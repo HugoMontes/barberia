@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Http\Controllers\Admin\FacturaController;
 use App\Http\Controllers\Admin\ReservaController;
 use App\Http\Controllers\Admin\ServicioController;
+use App\Http\Controllers\Barbero\DashboardBarberoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +22,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('reserva', ReservaController::class);
     Route::resource('factura', FacturaController::class);
     Route::get('/factura/reserva/detalle/{reserva_id}', [FacturaController::class, 'detalleFactura'])->name('factura.reserva.detalle');
+});
+
+Route::prefix('barbero')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardBarberoController::class, 'index'])->name('barbero.dashboard');
 });
 
 Route::get('/dashboard', function () {

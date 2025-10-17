@@ -59,7 +59,16 @@
         @include('layouts.admin.header')
         <!--end::Header-->
         <!--begin::Sidebar-->
-        @include('layouts.admin.menu')
+
+        @auth
+            @if (auth()->user()->role === 'admin')
+                @include('layouts.admin.menu')
+            @endif
+            @if (auth()->user()->role === 'barbero')
+                @include('layouts.admin.barbero.menu')
+            @endif
+        @endauth
+
         <!--end::Sidebar-->
         <!--begin::App Main-->
         <main class="app-main">
