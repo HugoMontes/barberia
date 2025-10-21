@@ -16,7 +16,7 @@ class ReservaController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $reservas = Reserva::paginate(10);
+        $reservas = Reserva::orderBy('id', 'DESC')->paginate(10);
         return view('admin.reserva.index', compact('reservas'));
     }
 

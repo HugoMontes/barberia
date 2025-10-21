@@ -10,7 +10,7 @@
                 <div class="card-title">Listado de Reservas</div>
 
                 <!-- Botón para crear una nueva reserva -->
-                <a href="{{ route('reserva.create') }}" class="btn btn-primary">Nueva Reserva</a>
+                <a href="{{ route('reserva.create') }}" class="btn btn-success">Nueva Reserva</a>
             </div>
         </div>
 
@@ -24,7 +24,7 @@
                         <th>Barbero</th>
                         <th>Fecha y Hora</th>
                         <th>Estado</th>
-                        <th style="width: 200px">Acciones</th>
+                        <th style="width: 100px">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,18 +53,10 @@
                             </td>
                             <td>
                                 <!-- Botón para editar la reserva -->
-                                <a href="{{ route('reserva.edit', $reserva->id) }}" class="btn btn-sm btn-primary"
+                                <a href="{{ route('barbero.reserva.edit', $reserva->id) }}" class="btn btn-sm btn-primary"
                                     title="Editar">
                                     Editar
                                 </a>
-
-                                <!-- Formulario para eliminar la reserva -->
-                                <form action="{{ route('reserva.destroy', $reserva->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger btn-eliminar">Eliminar</button>
-                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -75,33 +67,4 @@
             {{ $reservas->links('pagination::bootstrap-5') }}
         </div>
     </div>
-@endsection
-
-@section('script')
-    <!-- SweetAlert para confirmación de eliminación -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.addEventListener("click", function(e) {
-                if (e.target && e.target.classList.contains('btn-eliminar')) {
-                    e.preventDefault();
-                    const form = e.target.closest('form');
-                    Swal.fire({
-                        title: '¿Estás seguro de eliminar la reserva?',
-                        text: "¡No podrás revertir esto!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                }
-            });
-        });
-    </script>
 @endsection

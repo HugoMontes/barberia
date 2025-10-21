@@ -26,36 +26,12 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a href="{{ route('cliente.index') }}" class="nav-link">
-                        <i class="nav-icon bi bi-people"></i>
-                        <p>Clientes</p>
-                    </a>
-                </li>
                 <li class="nav-item">
-                    <a href="{{ route('barbero.index') }}" class="nav-link">
-                        <i class="nav-icon bi bi-person-badge-fill"></i>
-                        <p> Barberos</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('servicio.index') }}" class="nav-link">
-                        <i class="nav-icon bi bi-scissors"></i>
-                        <p>Servicios</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('reserva.index') }}" class="nav-link">
+                    <a href="{{ route('barbero.reserva.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-calendar-check"></i>
                         <p>Reservas</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('factura.index') }}" class="nav-link">
-                        <i class="nav-icon bi bi-receipt"></i>
-                        <p>Facturas</p>
-                    </a>
-                </li> --}}
             </ul>
             <!--end::Sidebar Menu-->
         </nav>

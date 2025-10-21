@@ -12,6 +12,12 @@ class ReservaEstados {
         'cancelada' => 'Cancelada'
     ];
 
+    public const ESTADOS_PARA_BARBEROS = [
+        'pendiente' => 'Pendiente',
+        'confirmada' => 'Confirmada',
+        'completada' => 'Completada',
+    ];
+
     public const PENDIENTE = 'pendiente';
     public const CONFIRMADA = 'confirmada';
     public const COMPLETADA = 'completada';
