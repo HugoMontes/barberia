@@ -12,8 +12,12 @@ use App\Http\Controllers\Barbero\BarberoReservaController;
 use App\Http\Controllers\Barbero\DashboardBarberoController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('web.index');
+})->name('web.index');
+
+Route::get('/about', function () {
+    return view('web.about');
+})->name('web.about');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
